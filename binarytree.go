@@ -63,11 +63,11 @@ func postt(root *TreeNode, travers *[]int) {
 	}
 
 	if root.Left != nil {
-		it(root.Left, travers)
+		postt(root.Left, travers)
 	}
 
 	if root.Right != nil {
-		it(root.Right, travers)
+		postt(root.Right, travers)
 	}
 
 	*travers = append(*travers, root.Val)
