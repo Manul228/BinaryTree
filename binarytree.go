@@ -151,75 +151,21 @@ func maxDepth(root *TreeNode) int {
 	return answer
 }
 
-func levelOrderNodes(root *TreeNode) [][]*TreeNode {
-	var levels [][]*TreeNode
-
-	if root == nil {
-		return levels
+func isMirror(left, right *TreeNode) bool {
+	if left == nil && right == nil {
+		return true
 	}
 
-	var queue []*TreeNode
-	var leaves []*TreeNode
-	var node *TreeNode
-	var level []*TreeNode
-
-	queue = append(queue, root)
-
-	for len(queue) > 0 {
-		node = queue[0]
-		queue = queue[1:]
-
-		level = append(level, node)
-
-		if node.Left != nil {
-			leaves = append(leaves, node.Left)
-		}
-
-		if node.Right != nil {
-			leaves = append(leaves, node.Right)
-		}
-
-		if len(queue) == 0 {
-			levels = append(levels, level)
-			level = make([]*TreeNode, 0)
-
-			for _, l := range leaves {
-				queue = append(queue, l)
-			}
-
-			leaves = make([]*TreeNode, 0)
+	if left != nil && right != nil {
+		if left.Val == right.Val {
+			return isMirror(left.Right, right.Left) && isMirror(left.Left, right.Right)
 		}
 	}
-
-	return levels
-}
-
-func isNodesEqual(left, right *TreeNode) bool {
-	if left.Val != right.Val {
-
-	}
+	return false
 }
 
 func isSymmetric(root *TreeNode) bool {
-	var leftTraverse [][]*TreeNode = levelOrderNodes(root.Left)
-	var rightTraverse [][]*TreeNode = levelOrderNodes(root.Right)
-
-	if len(leftTraverse) != len(rightTraverse) {
-		return false
-	}
-
-	fmt.Println(leftTraverse)
-	fmt.Println(rightTraverse)
-
-	for i, lt := range leftTraverse {
-		for j, rt := range rightTraverse[i] {
-			if lt[len(lt)-j-1] != rt {
-				return false
-			}
-		}
-	}
-
-	return true
+	return isMirror(root, root)
 }
 
 func main() {
@@ -232,26 +178,26 @@ func main() {
 	right := TreeNode{}
 	right.Val = 2
 
-	// left1 := TreeNode{}
-	// left1.Val = 3
+	left1 := TreeNode{}
+	left1.Val = 4
 
 	right1 := TreeNode{}
-	right1.Val = 4
+	right1.Val = 5
 
-	left2 := TreeNode{}
-	left2.Val = 4
+	// left2 := TreeNode{}
+	// left2.Val = 4
 
-	// right2 := TreeNode{}
-	// right2.Val = 3
+	right2 := TreeNode{}
+	right2.Val = 4
 
 	root.Left = &left
 	root.Right = &right
 
-	// root.Left.Left = &left1
+	root.Left.Left = &left1
 	root.Left.Right = &right1
 
-	root.Right.Left = &left2
-	// root.Right.Right = &right2
+	// root.Right.Left = &left2
+	root.Right.Right = &right2
 
 	result := isSymmetric(&root)
 
