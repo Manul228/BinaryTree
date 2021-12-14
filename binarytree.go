@@ -151,9 +151,58 @@ func maxDepth(root *TreeNode) int {
 	return answer
 }
 
+func levelOrderNodes(root *TreeNode) [][]*TreeNode {
+	var levels [][]*TreeNode
+
+	if root == nil {
+		return levels
+	}
+
+	var queue []*TreeNode
+	var leaves []*TreeNode
+	var node *TreeNode
+	var level []*TreeNode
+
+	queue = append(queue, root)
+
+	for len(queue) > 0 {
+		node = queue[0]
+		queue = queue[1:]
+
+		level = append(level, node)
+
+		if node.Left != nil {
+			leaves = append(leaves, node.Left)
+		}
+
+		if node.Right != nil {
+			leaves = append(leaves, node.Right)
+		}
+
+		if len(queue) == 0 {
+			levels = append(levels, level)
+			level = make([]*TreeNode, 0)
+
+			for _, l := range leaves {
+				queue = append(queue, l)
+			}
+
+			leaves = make([]*TreeNode, 0)
+		}
+	}
+
+	return levels
+}
+
+func isNodesEqual(left, right *TreeNode) bool {
+	if left.Val != right.Val {
+
+	}
+}
+
 func isSymmetric(root *TreeNode) bool {
-	var leftTraverse [][]int = levelOrder(root.Left)
-	var rightTraverse [][]int = levelOrder(root.Right)
+	var leftTraverse [][]*TreeNode = levelOrderNodes(root.Left)
+	var rightTraverse [][]*TreeNode = levelOrderNodes(root.Right)
 
 	if len(leftTraverse) != len(rightTraverse) {
 		return false
