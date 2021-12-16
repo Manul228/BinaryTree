@@ -168,36 +168,19 @@ func isSymmetric(root *TreeNode) bool {
 	return isMirror(root, root)
 }
 
-func hps(root *TreeNode, currentSum int, targetSum *int, isFinded *bool) {
-
-	if *isFinded {
-		return
-	}
-
-	var newCurrentSum int = currentSum + root.Val
-
-	if newCurrentSum == *targetSum && root.Left == nil && root.Right == nil {
-		*isFinded = true
-	}
-
-	if root.Left != nil {
-		hps(root.Left, newCurrentSum, targetSum, isFinded)
-	}
-
-	if root.Right != nil {
-		hps(root.Right, newCurrentSum, targetSum, isFinded)
-	}
-
-}
-
 func hasPathSum(root *TreeNode, targetSum int) bool {
 	if root == nil {
 		return false
 	}
-	var currentSum int = 0
-	var isFinded bool = false
-	hps(root, currentSum, &targetSum, &isFinded)
-	return isFinded
+
+	if root.Left == nil && root.Right == nil {
+		if root.Val == targetSum {
+			return true
+		}
+		return false
+	}
+
+	return hasPathSum(root.Left, targetSum-root.Val) || hasPathSum(root.Right, targetSum-root.Val)
 }
 
 func main() {
