@@ -125,7 +125,7 @@ func levelOrder(root *TreeNode) [][]int {
 	return levels
 }
 
-func helperMaxDepth(root *TreeNode, depth int, answer *int) {
+func md(root *TreeNode, depth int, answer *int) {
 	if root == nil {
 		if depth > *answer {
 			*answer = depth
@@ -133,8 +133,8 @@ func helperMaxDepth(root *TreeNode, depth int, answer *int) {
 		return
 	}
 
-	helperMaxDepth(root.Left, depth+1, answer)
-	helperMaxDepth(root.Right, depth+1, answer)
+	md(root.Left, depth+1, answer)
+	md(root.Right, depth+1, answer)
 
 	return
 }
@@ -146,7 +146,7 @@ func maxDepth(root *TreeNode) int {
 
 	var answer int
 
-	helperMaxDepth(root, 0, &answer)
+	md(root, 0, &answer)
 
 	return answer
 }
@@ -166,6 +166,38 @@ func isMirror(left, right *TreeNode) bool {
 
 func isSymmetric(root *TreeNode) bool {
 	return isMirror(root, root)
+}
+
+func hps(root *TreeNode, currentSum int, targetSum *int, isFinded *bool) {
+
+	if *isFinded {
+		return
+	}
+
+	var newCurrentSum int = currentSum + root.Val
+
+	if newCurrentSum == *targetSum && root.Left == nil && root.Right == nil {
+		*isFinded = true
+	}
+
+	if root.Left != nil {
+		hps(root.Left, newCurrentSum, targetSum, isFinded)
+	}
+
+	if root.Right != nil {
+		hps(root.Right, newCurrentSum, targetSum, isFinded)
+	}
+
+}
+
+func hasPathSum(root *TreeNode, targetSum int) bool {
+	if root == nil {
+		return false
+	}
+	var currentSum int = 0
+	var isFinded bool = false
+	hps(root, currentSum, &targetSum, &isFinded)
+	return isFinded
 }
 
 func main() {
@@ -188,7 +220,7 @@ func main() {
 	// left2.Val = 4
 
 	right2 := TreeNode{}
-	right2.Val = 4
+	right2.Val = 8
 
 	root.Left = &left
 	root.Right = &right
@@ -199,7 +231,7 @@ func main() {
 	// root.Right.Left = &left2
 	root.Right.Right = &right2
 
-	result := isSymmetric(&root)
+	result := hasPathSum(&root, 11)
 
 	fmt.Println(result)
 }
