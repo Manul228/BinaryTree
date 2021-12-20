@@ -183,6 +183,42 @@ func hasPathSum(root *TreeNode, targetSum int) bool {
 	return hasPathSum(root.Left, targetSum-root.Val) || hasPathSum(root.Right, targetSum-root.Val)
 }
 
+func search(arr []int, start, end int, value int) int {
+	var i int
+	for i = start; i < end; i++ {
+		if arr[i] == value {
+			break
+		}
+	}
+	return i
+}
+
+func buildUtil(in []int, post []int, inStart, inEnd int, postStart, postEnd int) *TreeNode {
+	if inStart > inEnd {
+		return nil
+	}
+
+	var node *TreeNode = &TreeNode{}
+	node.Val = post[postEnd]
+
+	if inStart == inEnd {
+		return node
+	}
+
+	inIndex := search(in, inStart, inEnd, node.Val)
+
+	node.Left = buildUtil(in, post, inStart, inIndex-1, postStart, postStart-inStart+inIndex-1)
+	node.Right = buildUtil(in, post, inIndex+1, inEnd, postEnd-inEnd+inIndex, postEnd-1)
+
+	return node
+}
+
+func buildTree(inorder []int, postorder []int) *TreeNode {
+	n := len(inorder)
+	tree := buildUtil(inorder, postorder, 0, n-1, 0, n-1)
+	return tree
+}
+
 func main() {
 	root := TreeNode{}
 	root.Val = 1
@@ -214,7 +250,10 @@ func main() {
 	// root.Right.Left = &left2
 	root.Right.Right = &right2
 
-	result := hasPathSum(&root, 11)
+	in := inorderTraversal(&root)
+	post := postorderTraversal(&root)
+
+	result := buildTree(in, post)
 
 	fmt.Println(result)
 }
